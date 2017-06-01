@@ -1,13 +1,18 @@
+
 class User < ApplicationRecord
+  include SUAP::API
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
+  devise :database_authenticatable, :rememberable, :trackable, :validatable, :encryptable
 
-  def self.find_or_create(user_data:, token:)
-    user = User.find_by_enroll_id(user_data["matricula"])
+  def self.find_or_create_by_credentials(username:, password:)
+    user = User.find_by_enroll_id(username)
+
     if user.nil?
-      user = User.new(
+      token = authenticate(username: username, password: password)
+      user_data = fetch_user_data(token)
+      user = User.create(
         username: user_data["matricula"],
         suap_token: token,
         suap_id: user_data["id"],
@@ -16,11 +21,16 @@ class User < ApplicationRecord
         fullname: user_data["vinculo"]["nome"],
         url_profile_pic: user_data["url_foto_75x100"],
         category: user_data["vinculo"]["categoria"],
-        email: user_data["email"]
+        email: user_data["email"],
+        password: password
       )
-      user.save(validate: false)
     end
+
     user
+  end
+
+  def decrypted_password
+    Devise::Encryptable::Encryptors::Aes256.decrypt(encrypted_password, Devise.pepper)
   end
 
 end

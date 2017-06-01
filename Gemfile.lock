@@ -1,3 +1,9 @@
+GIT
+  remote: https://github.com/jalerson/aes
+  revision: 8366dc165c90cb8b4809e4aedf597dbe745a4450
+  specs:
+    aes (0.5.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -68,6 +74,8 @@ GEM
       railties (>= 4.1.0, < 5.2)
       responders
       warden (~> 1.2.3)
+    devise-encryptable (0.2.0)
+      devise (>= 2.1.0)
     domain_name (0.5.20170404)
       unf (>= 0.0.5, < 1.0.0)
     erubi (1.6.0)
@@ -197,10 +205,12 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  aes!
   byebug
   capybara (~> 2.13)
   coffee-rails (~> 4.2)
   devise
+  devise-encryptable
   jbuilder (~> 2.5)
   listen (>= 3.0.5, < 3.2)
   pg (~> 0.18)

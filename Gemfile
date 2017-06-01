@@ -7,6 +7,8 @@ end
 
 gem 'devise'
 gem 'rest-client'
+gem 'devise-encryptable'
+gem 'aes', git: 'https://github.com/jalerson/aes'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.1.1'

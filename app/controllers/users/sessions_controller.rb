@@ -1,8 +1,6 @@
-require 'suap'
 
 class Users::SessionsController < Devise::SessionsController
   skip_before_action :verify_authenticity_token, :only => [ :create ]
-  include SUAP::API
 
   # GET /resource/sign_in
   # def new
@@ -11,9 +9,8 @@ class Users::SessionsController < Devise::SessionsController
 
   # POST /resource/sign_in
   def create
-    token = authenticate(username: params[:user][:username], password: params[:user][:password])
-    user_data = fetch_user_data(token)
-    user = User.find_or_create(user_data: user_data, token: token)
+    user = User.find_or_create_by_credentials(username: params[:user][:username], password: params[:user][:password])
+    render json: user
   end
 
   # DELETE /resource/sign_out
