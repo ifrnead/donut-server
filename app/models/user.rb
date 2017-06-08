@@ -52,7 +52,6 @@ class User < ApplicationRecord
       user = User.find_by_token(token)
       break if user.nil?
     end
-    byebug
     self.token = token
   end
 
