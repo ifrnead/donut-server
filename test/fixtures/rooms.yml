@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  suap_id: 1
+  year: 1
+  semester: 1
+  curricular_component: MyString
+  title: MyString
+
+two:
+  suap_id: 1
+  year: 1
+  semester: 1
+  curricular_component: MyString
+  title: MyString
