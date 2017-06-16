@@ -5,6 +5,7 @@ class Room < ApplicationRecord
 
   has_many :subscriptions
   has_many :users, through: :subscriptions
+  has_many :messages, as: :receiver
 
   before_create :set_title
 

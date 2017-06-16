@@ -10,9 +10,18 @@ Rails.application.routes.draw do
   post 'api/auth', to: 'api#auth', as: :auth
 
   namespace :api do
+    # Users
     get 'users/me', to: 'users#me', as: :user_data
     get 'users/:id', to: 'users#show'
     get 'users', to: 'users#index'
     get 'users/:user_id/rooms', to: 'rooms#rooms_by_user', as: :user_rooms
+
+    # Rooms
+    get 'rooms', to: 'rooms#index'
+    get 'rooms/:room_id', to: 'rooms#show'
+    get 'rooms/:room_id/messages', to: 'messages#messages_by_room'
+
+    # Messages
+    post 'messages/create', to: 'messages#create'
   end
 end

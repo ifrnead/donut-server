@@ -10,10 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170607194759) do
+ActiveRecord::Schema.define(version: 20170616140645) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "messages", force: :cascade do |t|
+    t.text "content"
+    t.integer "author_id"
+    t.string "receiver_type"
+    t.bigint "receiver_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["receiver_id", "receiver_type"], name: "index_messages_on_receiver_id_and_receiver_type"
+    t.index ["receiver_type", "receiver_id"], name: "index_messages_on_receiver_type_and_receiver_id"
+  end
 
   create_table "rooms", force: :cascade do |t|
     t.integer "suap_id"
