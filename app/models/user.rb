@@ -11,7 +11,11 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :rememberable, :trackable, :validatable, :encryptable
 
+  validates :email, :password, :username, :current_suap_token, :enroll_id, :name, :fullname, :url_profile_pic, :category, presence: true
+
   before_create :new_token
+  after_create :fetch_rooms
+  before_save :update_suap_token_expiration_time, if: :current_suap_token_changed?
 
   PUBLIC_FIELDS = [ :id, :username, :name, :fullname, :url_profile_pic, :category ]
 
@@ -22,12 +26,11 @@ class User < ApplicationRecord
       user
     else
       begin
-        token = SUAP::API.authenticate(username: username, password: password)
-        user_data = SUAP::API.fetch_user_data(token)
+        suap_token = SUAP::API.authenticate(username: username, password: password)
+        user_data = SUAP::API.fetch_user_data(suap_token)
         user = User.create(
           username: user_data["matricula"],
-          suap_token: token,
-          suap_token_expiration_date: Date.tomorrow,
+          current_suap_token: suap_token,
           suap_id: user_data["id"],
           enroll_id: user_data["matricula"],
           name: user_data["nome_usual"],
@@ -51,7 +54,23 @@ class User < ApplicationRecord
   end
 
   def valid_suap_token?
-    Date.today > self.suap_token_expiration_date
+    DateTime.now > self.suap_token_expiration_time
+  end
+
+  def suap_token
+    if not valid_suap_token?
+      self.request_new_suap_token
+    end
+    self.current_suap_token
+  end
+
+  def request_new_suap_token
+    begin
+      new_suap_token = SUAP::API.authenticate(username: username, password: self.decrypted_password)
+      self.update_attribute(:current_suap_token, new_suap_token)
+    rescue RestClient::BadRequest
+      raise DonutServer::Errors::InvalidCredentialsError.new
+    end
   end
 
   def new_token
@@ -70,6 +89,17 @@ class User < ApplicationRecord
       fields[public_field] = self[public_field]
     end
     fields
+  end
+
+  private
+
+  def fetch_rooms
+    rooms = Room.fetch_by_user(self.current_suap_token)
+    self.rooms << rooms
+  end
+
+  def update_suap_token_expiration_time
+    self.suap_token_expiration_time = DateTime.now + 1
   end
 
 end

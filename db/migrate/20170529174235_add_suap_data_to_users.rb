@@ -1,8 +1,8 @@
 class AddSuapDataToUsers < ActiveRecord::Migration[5.1]
   def change
-    add_column :users, :suap_token, :string
-    add_column :users, :suap_token_expiration_date, :date
-    add_index :users, :suap_token, unique: true
+    add_column :users, :current_suap_token, :string
+    add_column :users, :suap_token_expiration_time, :datetime
+    add_index :users, :current_suap_token, unique: true
     add_column :users, :suap_id, :integer
     add_column :users, :enroll_id, :integer
     add_column :users, :name, :string

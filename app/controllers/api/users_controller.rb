@@ -40,8 +40,8 @@ class Api::UsersController < ApplicationController
       The User model has the following fields.
       - <b>email (string)</b>: e-mail address
       - <b>username (string)</b>: username
-      - <b>suap_token (string)</b>: SUAP token
-      - <b>suap_token_expiration_date (Date)</b>: SUAP token expiration date
+      - <b>current_suap_token (string)</b>: current SUAP token
+      - <b>suap_token_expiration_time (Datetime)</b>: SUAP token expiration time
       - <b>suap_id (integer)</b>: User ID on SUAP
       - <b>enroll_id (integer)</b>: Enrollment ID on SUAP
       - <b>name (string)</b>: name

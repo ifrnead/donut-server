@@ -59,8 +59,8 @@ ActiveRecord::Schema.define(version: 20170616140645) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "username"
-    t.string "suap_token"
-    t.date "suap_token_expiration_date"
+    t.string "current_suap_token"
+    t.datetime "suap_token_expiration_time"
     t.integer "suap_id"
     t.integer "enroll_id"
     t.string "name"
@@ -69,9 +69,9 @@ ActiveRecord::Schema.define(version: 20170616140645) do
     t.string "category"
     t.string "token"
     t.string "password_salt"
+    t.index ["current_suap_token"], name: "index_users_on_current_suap_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
-    t.index ["suap_token"], name: "index_users_on_suap_token", unique: true
     t.index ["token"], name: "index_users_on_token", unique: true
     t.index ["username"], name: "index_users_on_username", unique: true
   end
