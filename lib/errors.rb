@@ -12,6 +12,12 @@ module DonutServer
         super(msg)
       end
     end
+
+    class RecordNotFound < ActiveRecord::RecordNotFound
+      def initialize(msg = "record_not_found")
+        super(msg)
+      end
+    end
   end
 
 end
