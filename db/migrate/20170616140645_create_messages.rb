@@ -2,11 +2,10 @@ class CreateMessages < ActiveRecord::Migration[5.1]
   def change
     create_table :messages do |t|
       t.text :content
-      t.integer :author_id
-      t.belongs_to :receiver, polymorphic: true
+      t.belongs_to :user
+      t.belongs_to :room
 
       t.timestamps
     end
-    add_index :messages, [:receiver_id, :receiver_type]
   end
 end

@@ -4,8 +4,7 @@ require 'errors'
 class User < ApplicationRecord
   has_many :subscriptions
   has_many :rooms, through: :subscriptions
-  has_many :sent_messages, class_name: 'Message', foreign_key: 'author_id'
-  has_many :received_messages, as: :receiver, class_name: 'Message'
+  has_many :messages
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -89,6 +88,10 @@ class User < ApplicationRecord
       fields[public_field] = self[public_field]
     end
     fields
+  end
+
+  def send_message(content:, room_id:)
+    self.messages.create(content: content, room_id: room_id)
   end
 
   private

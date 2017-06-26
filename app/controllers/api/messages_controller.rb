@@ -21,18 +21,16 @@ class Api::MessagesController < ApplicationController
   # Create message
   api :POST, '/messages/create', "Create a new message"
   formats [ 'json' ]
-  param :message, Hash, desc: 'Message' do
+  param :message, Hash, desc: 'Message', required: true do
     param :content, String, desc: 'Message content', required: true
-    param :receiver_type, String, desc: 'Model name which will receive the message (User or Room)', required: true
-    param :receiver_id, Fixnum, desc: 'Model ID which will receive the message (User ID or Room ID)', required: true
+    param :room_id, Fixnum, desc: 'Room ID which will receive the message', required: true
   end
-  error 400, "Bad request: one or more mandatory fields wasn't provided"
-  example "'message': { 'content': 'Sample message', 'receiver_type': 'Room', 'received_id': '1' }"
-  example "'message': { 'content': 'Sample message', 'receiver_type': 'User', 'received_id': '2' }"
+  error 400, "Bad request: one or more mandatory fields wasn't provided, or the provided user doesn't belong to the room"
+  example "{ \"message\": { \"content\": \"Sample message\", \"room_id\": \"1\" } }"
 
   def create
     message = Message.new(message_params)
-    message.author = current_user
+    message.user = current_user
     if message.save
       json_response(message, :created)
     else
@@ -45,9 +43,8 @@ class Api::MessagesController < ApplicationController
       === Message fields
       The Message model has the following fields.
       - <b>content (String)</b>: message content
-      - <b>author_id (integer)</b>: ID of the sender
-      - <b>receiver_type (String)</b>: model name which the message was sent to ('User' or 'Room')
-      - <b>receiver_id (integer)</b>: model ID which the message was sent to (User ID ou Room ID)
+      - <b>user_id (integer)</b>: user ID
+      - <b>room_id (integer)</b>: room ID which the message was sent to
       === Authorization
       All resources described bellow require authorization by token. Provide the User Token through the HTTP header using the following format.
         Authorization: Token <user_token>
@@ -58,7 +55,7 @@ class Api::MessagesController < ApplicationController
   private
 
   def message_params
-    params.require(:message).permit(:content, :receiver_type, :receiver_id)
+    params.require(:message).permit(:content, :room_id)
   end
 
 end

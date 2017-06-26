@@ -8,12 +8,14 @@ Rails.application.routes.draw do
   #   sessions: 'users/sessions'
   # }
 
+  mount ActionCable.server => '/cable'
+
   post 'api/auth', to: 'api#auth', as: :auth
 
   namespace :api do
     # Users
     get 'users/me', to: 'users#me', as: :user_data
-    get 'users/:id', to: 'users#show'
+    get 'users/:user_id', to: 'users#show'
     get 'users', to: 'users#index'
     get 'users/:user_id/rooms', to: 'rooms#rooms_by_user', as: :user_rooms
 

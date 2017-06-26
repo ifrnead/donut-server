@@ -7,13 +7,13 @@ class ApiController < ApplicationController
   # Authentication
   api :POST, '/auth', "Authentication"
   formats [ 'json' ]
-  param :user, Hash, desc: 'User' do
+  param :user, Hash, desc: 'User', required: true do
     param :username, String, desc: 'Username', required: true
     param :password, String, desc: 'Password', required: true
   end
   error 400, "Bad request: one or more mandatory fields wasn't provided"
   error 401, "Unauthorized: invalid credentials provided"
-  example "'user': { 'username': '3284983', 'password': 'mypass' }"
+  example "{ \"user\": { \"username\": \"000000\", \"password\": \"mypass\" } }"
 
   def auth
     if params[:user].present? and params[:user][:username].present? and params[:user][:password].present?
