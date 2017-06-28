@@ -18,6 +18,12 @@ module DonutServer
         super(msg)
       end
     end
+
+    class UnauthorizedError < StandardError
+      def initialize(msg = "unauthorized")
+        super(msg)
+      end
+    end
   end
 
 end

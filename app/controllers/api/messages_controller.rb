@@ -1,3 +1,5 @@
+require 'errors'
+
 class Api::MessagesController < ApplicationController
   include APIAuthentication
 
@@ -8,11 +10,17 @@ class Api::MessagesController < ApplicationController
   api :GET, "/rooms/:room_id/messages", "Messages by room"
   formats [ 'json' ]
   param :room_id, Fixnum, desc: "Room ID", required: true
-  error 404, 'Record not found: no room was found with the provided Room ID'
+  error 404, 'Record not found: no room found with the provided Room ID'
+  error 401, 'Unauthorized: current user doesn\'t belong to the provided Room ID'
 
   def messages_by_room
     begin
-      json_response(Room.find(params[:room_id]).messages)
+      room = Room.find(params[:room_id])
+      if room.include?(current_user)
+        json_response(room.messages)
+      else
+        raise DonutServer::Errors::UnauthorizedError.new
+      end
     rescue ActiveRecord::RecordNotFound
       raise DonutServer::Errors::RecordNotFound.new
     end

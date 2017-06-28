@@ -19,5 +19,9 @@ module ExceptionHandler
     rescue_from ActionController::RoutingError do |e|
       json_response({ message: e.message }, :not_found)
     end
+
+    rescue_from DonutServer::Errors::UnauthorizedError do |e|
+      json_response({ message: e.message }, :unauthorized)
+    end
   end
 end

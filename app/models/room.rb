@@ -29,6 +29,10 @@ class Room < ApplicationRecord
     rooms
   end
 
+  def include?(user)
+    self.users.include?(user)
+  end
+
   private
 
   def set_title
