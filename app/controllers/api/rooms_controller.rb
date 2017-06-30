@@ -17,7 +17,7 @@ class Api::RoomsController < ApplicationController
   # Show room
   api :GET, "/rooms/:room_id", "Room details"
   formats [ 'json' ]
-  param :room_id, Fixnum, desc: "Room ID", required: true
+  param :room_id, Integer, desc: "Room ID", required: true
   error 404, 'Record not found: no room found with the provided Room ID'
   error 401, 'Unauthorized: current user doesn\'t belongs to the provided Room ID'
 

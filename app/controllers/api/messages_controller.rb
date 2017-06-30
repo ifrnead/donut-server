@@ -9,7 +9,7 @@ class Api::MessagesController < ApplicationController
   # Messages by room
   api :GET, "/rooms/:room_id/messages", "Messages by room"
   formats [ 'json' ]
-  param :room_id, Fixnum, desc: "Room ID", required: true
+  param :room_id, Integer, desc: "Room ID", required: true
   error 404, 'Record not found: no room found with the provided Room ID'
   error 401, 'Unauthorized: current user doesn\'t belong to the provided Room ID'
 
@@ -31,7 +31,7 @@ class Api::MessagesController < ApplicationController
   formats [ 'json' ]
   param :message, Hash, desc: 'Message', required: true do
     param :content, String, desc: 'Message content', required: true
-    param :room_id, Fixnum, desc: 'Room ID which will receive the message', required: true
+    param :room_id, Integer, desc: 'Room ID which will receive the message', required: true
   end
   error 400, "Bad request: one or more mandatory fields wasn't provided, or the provided user doesn't belong to the room"
   example "{ \"message\": { \"content\": \"Sample message\", \"room_id\": \"1\" } }"

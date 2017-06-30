@@ -15,7 +15,7 @@ class Api::UsersController < ApplicationController
   # User details
   api :GET, "/users/:user_id", "User details"
   formats [ 'json' ]
-  param :user_id, Fixnum, desc: "User ID", required: true
+  param :user_id, Integer, desc: "User ID", required: true
   error 404, 'Record not found: no user was found with the provided User ID'
 
   def show

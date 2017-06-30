@@ -11,7 +11,6 @@ class ApiController < ApplicationController
     param :username, String, desc: 'Username', required: true
     param :password, String, desc: 'Password', required: true
   end
-  error 400, "Bad request: one or more mandatory fields wasn't provided"
   error 401, "Unauthorized: invalid credentials provided"
   example "{ \"user\": { \"username\": \"000000\", \"password\": \"mypass\" } }"
 
