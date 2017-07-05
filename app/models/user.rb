@@ -8,9 +8,9 @@ class User < ApplicationRecord
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :rememberable, :trackable, :validatable, :encryptable
+  devise :database_authenticatable, :rememberable, :trackable, :encryptable
 
-  validates :email, :password, :username, :current_suap_token, :enroll_id, :name, :fullname, :url_profile_pic, :category, presence: true
+  validates :password, :username, :current_suap_token, :enroll_id, :name, :fullname, :url_profile_pic, presence: true
 
   before_create :new_token
   after_create :fetch_rooms
