@@ -16,9 +16,44 @@ module SUAP
       return JSON.parse(response.body)
     end
 
-    def self.fetch_rooms_data(token:, year:, semester:)
+    def self.fetch_rooms_data_by_student(token:, year:, semester:)
+      rooms = Array.new
+      response = RestClient.get("https://suap.ifrn.edu.br/api/v2/minhas-informacoes/boletim/#{year}/#{semester}/", headers(token))
+      rooms_data = JSON.parse(response.body)
+      rooms_data.each do |room_data|
+        room = Room.find_by_suap_id(room_data["id"])
+        if room.nil?
+          room = Room.create(
+            suap_id: room_data["codigo_diario"],
+            year: 2017,
+            semester: 1,
+            curricular_component: room_data["disciplina"],
+            title: room_data["disciplina"]
+          )
+        end
+        rooms << room
+      end
+      rooms
+    end
+
+    def self.fetch_rooms_by_professor(token:, year:, semester:)
+      rooms = Array.new
       response = RestClient.get("https://suap.ifrn.edu.br/api/v2/minhas-informacoes/meus-diarios/#{year}/#{semester}/", headers(token))
-      return JSON.parse(response.body)
+      rooms_data = JSON.parse(response.body)
+      rooms_data.each do |room_data|
+        room = Room.find_by_suap_id(room_data["id"])
+        if room.nil?
+          room = Room.create(
+            suap_id: room_data["id"],
+            year: room_data["ano_letivo"],
+            semester: room_data["periodo_letivo"],
+            curricular_component: room_data["componente_curricular"],
+            title: room_data["componente_curricular"].split(" - ")[1]
+          )
+        end
+        rooms << room
+      end
+      rooms
     end
 
     private

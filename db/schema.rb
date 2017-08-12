@@ -45,7 +45,7 @@ ActiveRecord::Schema.define(version: 20170616140645) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "email", default: "", null: false
+    t.string "email", default: ""
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
@@ -60,8 +60,8 @@ ActiveRecord::Schema.define(version: 20170616140645) do
     t.string "username"
     t.string "current_suap_token"
     t.datetime "suap_token_expiration_time"
-    t.integer "suap_id"
-    t.integer "enroll_id"
+    t.string "suap_id"
+    t.string "enroll_id"
     t.string "name"
     t.string "fullname"
     t.string "url_profile_pic"

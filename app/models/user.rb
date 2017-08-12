@@ -27,6 +27,7 @@ class User < ApplicationRecord
       begin
         suap_token = SUAP::API.authenticate(username: username, password: password)
         user_data = SUAP::API.fetch_user_data(suap_token)
+        byebug
         user = User.create(
           username: user_data["matricula"],
           current_suap_token: suap_token,
@@ -35,7 +36,7 @@ class User < ApplicationRecord
           name: user_data["nome_usual"],
           fullname: user_data["vinculo"]["nome"],
           url_profile_pic: user_data["url_foto_75x100"],
-          category: user_data["vinculo"]["categoria"],
+          category: user_data["tipo_vinculo"],
           email: user_data["email"],
           password: password
         )
@@ -94,10 +95,18 @@ class User < ApplicationRecord
     self.messages.create(content: content, room_id: room_id)
   end
 
+  def employee?
+    self.category == 'Servidor'
+  end
+
+  def student?
+    self.category = 'Aluno'
+  end
+
   private
 
   def fetch_rooms
-    rooms = Room.fetch_by_user(self.current_suap_token)
+    rooms = Room.fetch_by_user(self)
     self.rooms << rooms
   end
 
