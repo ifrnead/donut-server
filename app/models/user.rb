@@ -27,7 +27,6 @@ class User < ApplicationRecord
       begin
         suap_token = SUAP::API.authenticate(username: username, password: password)
         user_data = SUAP::API.fetch_user_data(suap_token)
-        byebug
         user = User.create(
           username: user_data["matricula"],
           current_suap_token: suap_token,
@@ -100,7 +99,7 @@ class User < ApplicationRecord
   end
 
   def student?
-    self.category = 'Aluno'
+    self.category == 'Aluno'
   end
 
   private

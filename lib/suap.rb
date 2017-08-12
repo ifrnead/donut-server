@@ -36,7 +36,7 @@ module SUAP
       rooms
     end
 
-    def self.fetch_rooms_by_professor(token:, year:, semester:)
+    def self.fetch_rooms_data_by_professor(token:, year:, semester:)
       rooms = Array.new
       response = RestClient.get("https://suap.ifrn.edu.br/api/v2/minhas-informacoes/meus-diarios/#{year}/#{semester}/", headers(token))
       rooms_data = JSON.parse(response.body)

@@ -13,9 +13,9 @@ class Room < ApplicationRecord
 
   def self.fetch_by_user(user)
     if user.student?
-      SUAP::API.fetch_rooms_data_by_student(token: user.token, year: 2017, semester: 1)
+      SUAP::API.fetch_rooms_data_by_student(token: user.suap_token, year: 2017, semester: 1)
     else
-      SUAP::API.fetch_rooms_data_by_professor(token: user.token, year: 2017, semester: 1)
+      SUAP::API.fetch_rooms_data_by_professor(token: user.suap_token, year: 2017, semester: 1)
     end
   end
 
