@@ -2,10 +2,10 @@ require 'rails_helper'
 
 RSpec.describe ApiController, type: :controller do
   it "provides valid credentials" do
-    post :auth, params: { user: { username: Rails.application.secrets.username, password: Rails.application.secrets.password } }
+    post :auth, params: { user: { username: Rails.application.secrets.professor_username, password: Rails.application.secrets.professor_password } }
 
     expect(response).to be_success
-    expect(User.first.username).to eq Rails.application.secrets.username
+    expect(User.first.username).to eq Rails.application.secrets.professor_username.to_s
     expect(User.first.token).to eq json_response["token"]
     expect(response.content_type).to eq "application/json"
   end

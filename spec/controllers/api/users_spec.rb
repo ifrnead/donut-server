@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe "Users API", type: :request do
 
   before do
-    post '/api/auth', params: { user: { username: Rails.application.secrets.username, password: Rails.application.secrets.password } }
+    post '/api/auth', params: { user: { username: Rails.application.secrets.professor_username, password: Rails.application.secrets.professor_password } }
     @user = User.first
     @headers = { 'Authorization' => "Token #{@user.token}" }
   end
