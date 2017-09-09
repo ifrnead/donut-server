@@ -27,18 +27,29 @@ class User < ApplicationRecord
       begin
         suap_token = SUAP::API.authenticate(username: username, password: password)
         user_data = SUAP::API.fetch_user_data(suap_token)
-        user = User.create(
-          username: user_data["matricula"],
-          current_suap_token: suap_token,
-          suap_id: user_data["id"],
-          enroll_id: user_data["matricula"],
-          name: user_data["nome_usual"],
-          fullname: user_data["vinculo"]["nome"],
-          url_profile_pic: user_data["url_foto_75x100"],
-          category: user_data["tipo_vinculo"],
-          email: user_data["email"],
-          password: password
-        )
+        if user.present?
+          user.update_attributes(
+            current_suap_token: suap_token,
+            name: user_data["nome_usual"],
+            fullname: user_data["vinculo"]["nome"],
+            url_profile_pic: user_data["url_foto_75x100"],
+            email: user_data["email"],
+            password: password
+          )
+        else
+          user = User.create(
+            username: user_data["matricula"],
+            current_suap_token: suap_token,
+            suap_id: user_data["id"],
+            enroll_id: user_data["matricula"],
+            name: user_data["nome_usual"],
+            fullname: user_data["vinculo"]["nome"],
+            url_profile_pic: user_data["url_foto_75x100"],
+            category: user_data["tipo_vinculo"],
+            email: user_data["email"],
+            password: password
+          )
+        end
         user
       rescue RestClient::BadRequest
         raise DonutServer::Errors::InvalidCredentialsError.new
