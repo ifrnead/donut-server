@@ -18,17 +18,17 @@ module SUAP
 
     def self.fetch_rooms_data_by_student(token:, year:, semester:)
       rooms = Array.new
-      response = RestClient.get("https://suap.ifrn.edu.br/api/v2/minhas-informacoes/boletim/#{year}/#{semester}/", headers(token))
+      response = RestClient.get("https://suap.ifrn.edu.br/api/v2/minhas-informacoes/turmas-virtuais/#{year}/#{semester}/", headers(token))
       rooms_data = JSON.parse(response.body)
       rooms_data.each do |room_data|
         room = Room.find_by_suap_id(room_data["id"])
         if room.nil?
           room = Room.create(
-            suap_id: room_data["codigo_diario"],
+            suap_id: room_data["id"],
             year: 2017,
             semester: 1,
-            curricular_component: room_data["disciplina"],
-            title: room_data["disciplina"]
+            curricular_component: "#{room_data['sigla']} - #{room_data['descricao']}",
+            title: room_data["descricao"]
           )
         end
         rooms << room
