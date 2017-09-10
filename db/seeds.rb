@@ -5,3 +5,5 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+Room.create(suap_id: 1, year: 2017, semester: 1, curricular_component: 'Playground', title: 'Playground')

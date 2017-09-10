@@ -11,6 +11,7 @@ class Api::RoomsController < ApplicationController
   formats [ 'json' ]
 
   def index
+    current_user.update_rooms
     json_response(current_user.rooms)
   end
 

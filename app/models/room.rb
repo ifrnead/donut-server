@@ -23,10 +23,14 @@ class Room < ApplicationRecord
     self.users.include?(user)
   end
 
+  def self.playground
+    self.find_by_suap_id(1)
+  end
+
   private
 
   def set_title
-    self.title = self.curricular_component.split(" - ")[1]
+    self.title = self.curricular_component.split(" - ")[1] if title.nil?
   end
 
 end

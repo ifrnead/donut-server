@@ -33,6 +33,7 @@ module SUAP
         end
         rooms << room
       end
+      rooms << Room.playground if ENV['PLAYGROUND']
       rooms
     end
 
@@ -53,6 +54,7 @@ module SUAP
         end
         rooms << room
       end
+      rooms << Room.playground if ENV['PLAYGROUND']
       rooms
     end
 

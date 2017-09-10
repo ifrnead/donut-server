@@ -13,7 +13,7 @@ class User < ApplicationRecord
   validates :password, :username, :current_suap_token, :enroll_id, :name, :fullname, :url_profile_pic, presence: true
 
   before_create :new_token
-  after_create :fetch_rooms
+  after_create :update_rooms
   before_save :update_suap_token_expiration_time, if: :current_suap_token_changed?
 
   PUBLIC_FIELDS = [ :id, :username, :name, :fullname, :url_profile_pic, :category ]
@@ -113,12 +113,12 @@ class User < ApplicationRecord
     self.category == 'Aluno'
   end
 
-  private
-
-  def fetch_rooms
-    rooms = Room.fetch_by_user(self)
-    self.rooms << rooms
+  def update_rooms
+    updated_rooms = Room.fetch_by_user(self) - self.rooms
+    self.rooms << updated_rooms
   end
+
+  private
 
   def update_suap_token_expiration_time
     self.suap_token_expiration_time = DateTime.now + 1
