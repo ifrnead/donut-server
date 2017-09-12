@@ -12,9 +12,8 @@ class User < ApplicationRecord
 
   validates :password, :username, :current_suap_token, :enroll_id, :name, :fullname, :url_profile_pic, presence: true
 
-  before_create :new_token
+  before_create :new_token, :set_suap_token_new_expiration_time
   after_create :update_rooms
-  before_save :update_suap_token_expiration_time, if: :current_suap_token_changed?
 
   PUBLIC_FIELDS = [ :id, :username, :name, :fullname, :url_profile_pic, :category ]
 
@@ -64,11 +63,11 @@ class User < ApplicationRecord
   end
 
   def valid_suap_token?
-    DateTime.now > self.suap_token_expiration_time
+    DateTime.now < self.suap_token_expiration_time
   end
 
   def suap_token
-    if not valid_suap_token?
+    if not self.valid_suap_token?
       self.request_new_suap_token
     end
     self.current_suap_token
@@ -77,7 +76,9 @@ class User < ApplicationRecord
   def request_new_suap_token
     begin
       new_suap_token = SUAP::API.authenticate(username: username, password: self.decrypted_password)
-      self.update_attribute(:current_suap_token, new_suap_token)
+      self.current_suap_token = new_suap_token
+      self.set_suap_token_new_expiration_time
+      self.save(validate: false)
     rescue RestClient::BadRequest
       raise DonutServer::Errors::InvalidCredentialsError.new
     end
@@ -120,7 +121,7 @@ class User < ApplicationRecord
 
   private
 
-  def update_suap_token_expiration_time
+  def set_suap_token_new_expiration_time
     self.suap_token_expiration_time = DateTime.now + 1
   end
 
