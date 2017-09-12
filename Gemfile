@@ -13,6 +13,7 @@ gem 'devise-encryptable'
 gem 'aes', git: 'https://github.com/jalerson/aes'
 gem 'hashid-rails'
 gem 'apipie-rails'
+gem "sentry-raven"
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.1.1'
