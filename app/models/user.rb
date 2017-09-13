@@ -119,8 +119,6 @@ class User < ApplicationRecord
     self.rooms << updated_rooms
   end
 
-  private
-
   def set_suap_token_new_expiration_time
     self.suap_token_expiration_time = DateTime.now + 1
   end
